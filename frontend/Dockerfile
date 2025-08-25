@@ -1,13 +1,12 @@
-FROM node:20 AS build
+FROM node:20-slim AS build
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 COPY . .
 RUN npm run build
 
-# Nginx für Serving
-FROM nginx:alpine
+FROM nginx:stable-alpine
 COPY --from=build /app/build /usr/share/nginx/html
 
 EXPOSE 80

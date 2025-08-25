@@ -1,12 +1,15 @@
-FROM node:20 AS build
+# Build-Stage
+FROM node:20-slim AS build
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 COPY . .
 RUN npm run build
 
-FROM nginx:alpine
+# Production-Stage
+FROM nginx:stable-alpine
+
 COPY --from=build /app/build /usr/share/nginx/html
 
 EXPOSE 80
