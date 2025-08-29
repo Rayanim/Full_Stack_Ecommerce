@@ -1,22 +1,31 @@
-version: "3.8"
-
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: backend
     ports:
-      - "5000:5000"
+      - "4000:4000"
     env_file:
       - ./backend/.env
+    volumes:
+      - ./backend/upload:/app/upload  # حتى تظل الصور بعد إعادة البناء
+    restart: unless-stopped
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: frontend
     ports:
       - "3000:80"
+    restart: unless-stopped
 
   admin:
-    build: ./admin
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
     container_name: admin
     ports:
       - "3001:80"
+    restart: unless-stopped

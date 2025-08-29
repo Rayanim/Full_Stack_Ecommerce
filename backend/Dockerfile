@@ -1,16 +1,12 @@
-FROM node:20-slim
-
+FROM node:20
 WORKDIR /app
 
 COPY package*.json ./
-
-# Systempakete aktualisieren + npm-Abhängigkeiten sicher installieren
-RUN apt-get update && apt-get upgrade -y && apt-get clean \
-    && npm ci \
-    && npm audit fix --force \
-    && npm cache clean --force
+RUN npm install --production
 
 COPY . .
 
-EXPOSE 5000
-CMD ["npm", "start"]
+RUN mkdir -p /app/upload/images
+
+EXPOSE 4000
+CMD ["node", "index.js"]
